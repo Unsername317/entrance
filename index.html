@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>總翔企業 內部入口網站</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
+    background: #f4f6fa;
+    color: #1f2430;
+  }
+  a { text-decoration: none; color: inherit; }
+  .wrap { padding: 14px; }
+  .card {
+    background: #ffffff;
+    border: 1px solid #e2e5ea;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .hero {
+    background: linear-gradient(135deg, #eaf2fd 0%, #fdf6ea 100%);
+    padding: 18px 20px;
+  }
+  .hero-title { font-size: 18px; font-weight: 600; color: #16305c; }
+  .hero-sub { font-size: 13px; color: #16305c; margin-top: 2px; }
+  .hero-row { display: flex; gap: 8px; margin-top: 12px; }
+  .search-box, .copilot-box {
+    background: #ffffff;
+    border: 1px solid #d7dce4;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  .search-box { flex: 1; color: #8a90a0; }
+  .copilot-box { color: #1f2430; white-space: nowrap; border-color: #b9c2cf; }
+
+  .section { padding: 16px 20px; border-bottom: 1px solid #eceef2; }
+  .section-title { font-size: 13px; font-weight: 600; color: #545b66; margin-bottom: 10px; }
+
+  .todo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); gap: 8px; }
+  .todo-tile { background: #f5f6f8; border-radius: 8px; padding: 12px; text-align: center; }
+  .todo-tile .icon { font-size: 20px; }
+  .todo-tile .label { font-size: 13px; margin-top: 6px; }
+  .todo-tile.disabled { opacity: .55; }
+  a.todo-tile:hover { background: #eaf1fd; }
+
+  .onboarding { background: #fff8e6; }
+  .onboarding .section-title { color: #8a5a00; }
+  .onboarding-list { font-size: 13px; color: #8a5a00; line-height: 1.9; }
+  .onboarding-list a { text-decoration: underline; }
+
+  .two-col { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: 16px; }
+  .announce-item { font-size: 13px; line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #eceef2; }
+  .announce-item:last-child { border-bottom: none; }
+
+  .kpi-card { background: #f5f6f8; border-radius: 8px; padding: 12px; }
+  .kpi-label { font-size: 13px; color: #8a90a0; }
+  .kpi-value { font-size: 24px; font-weight: 600; }
+  .kpi-bars { display: flex; align-items: flex-end; gap: 5px; height: 44px; margin-top: 10px; }
+  .kpi-bars div { flex: 1; background: #4f8ef7; border-radius: 2px; }
+  .kpi-caption { font-size: 12px; color: #8a90a0; margin-top: 6px; }
+
+  .bottom-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; padding: 16px 20px; }
+  .tag { font-size: 12px; background: #f5f6f8; border-radius: 8px; padding: 4px 10px; display: inline-block; margin: 0 6px 6px 0; }
+  .kb-list { font-size: 13px; line-height: 1.8; }
+  .kb-list a { color: #1b3a6b; }
+  .kb-list span.plain { color: #545b66; }
+
+  .note { font-size: 11px; color: #b0b6c0; padding: 6px 20px 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+
+    <div class="hero">
+      <div class="hero-title">總翔企業 內部入口網站</div>
+      <div class="hero-sub">找表單、查規定、看數據，都從這裡開始</div>
+      <div class="hero-row">
+        <div class="search-box">🔍 搜尋文件、規定、同事</div>
+        <div class="copilot-box">💬 問 Copilot</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">我要辦事</div>
+      <div class="todo-grid">
+        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE/1_%E5%9C%8B%E5%85%A7%E8%AB%8B%E6%AC%BE%E5%96%AE.xlsx" target="_blank">
+          <div class="icon">🧾</div><div class="label">請款</div>
+        </a>
+        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE/2_%E5%87%BA%E5%8B%A4%E8%A1%A8.xlsx" target="_blank">
+          <div class="icon">📅</div><div class="label">出勤・請假</div>
+        </a>
+        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE/3_%E5%85%AC%E5%8B%99%E7%A7%81%E8%BB%8A%E9%87%8C%E7%A8%8B%E7%B4%80%E9%8C%84%E8%A1%A8.xlsx" target="_blank">
+          <div class="icon">🚗</div><div class="label">公務車</div>
+        </a>
+        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE/6_%E5%87%BA%E5%B7%AE%E8%A8%88%E5%8A%83%E6%9B%B8.xlsx" target="_blank">
+          <div class="icon">✈️</div><div class="label">出差申請</div>
+        </a>
+        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Lists/List1/AllItems.aspx" target="_blank">
+          <div class="icon">🛒</div><div class="label">採購</div>
+        </a>
+        <div class="todo-tile disabled" title="尚未設定連結">
+          <div class="icon">🛠️</div><div class="label">IT 報修</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section onboarding">
+      <div class="section-title">新人上手：報到第一週</div>
+      <div class="onboarding-list">
+        <div>✅ 看 3 分鐘公司簡介影片</div>
+        <div>⬜ <a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FPowerAutomate%2FShared%20Documents%2F%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE&viewid=b6661aca%2D1b66%2D422e%2D9b56%2D62221fbeecb2" target="_blank">下載請款表單</a>並讀 <a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/SOP/%E5%9C%8B%E5%85%A7%E5%A4%96%E5%80%8B%E4%BA%BA%E8%AB%8B%E6%AC%BESOP-2026.03.03%E6%9B%B4.pdf" target="_blank">SOP</a></div>
+        <div>⬜ 認識我的部門與主管</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="two-col">
+        <div>
+          <div class="section-title">公告</div>
+          <div>
+            <div class="announce-item">115/3/1 起國外日支費調整</div>
+            <div class="announce-item">請款單月底前送達總公司</div>
+            <div class="announce-item">尾牙報名開始</div>
+          </div>
+        </div>
+        <div>
+          <div class="section-title">營運數據</div>
+          <div class="kpi-card">
+            <div class="kpi-label">本月營收</div>
+            <div class="kpi-value">— — —</div>
+            <div class="kpi-bars">
+              <div style="height:40%"></div>
+              <div style="height:65%"></div>
+              <div style="height:50%"></div>
+              <div style="height:85%"></div>
+              <div style="height:70%"></div>
+            </div>
+            <div class="kpi-caption">Power BI 報表</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div>
+        <div class="section-title">各區據點</div>
+        <div>
+          <span class="tag">北區</span>
+          <span class="tag">中區</span>
+          <span class="tag">台南區</span>
+          <span class="tag">麥寮區</span>
+          <span class="tag">高雄區</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-title">知識庫</div>
+        <div class="kb-list">
+          <div><a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/SOP/%E5%9C%8B%E5%85%A7%E5%A4%96%E5%80%8B%E4%BA%BA%E8%AB%8B%E6%AC%BESOP-2026.03.03%E6%9B%B4.pdf" target="_blank">請款常見問題</a></div>
+          <div><span class="plain">人事規章與福利</span></div>
+          <div><span class="plain">技術部維修紀錄</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="note">灰底無底線項目尚未設定連結，可再補上實際頁面。</div>
+</div>
+</body>
+</html>
