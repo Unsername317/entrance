@@ -2,172 +2,401 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>總翔企業 內部入口網站</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: "Segoe UI", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
-    background: #f4f6fa;
-    color: #1f2430;
-  }
-  a { text-decoration: none; color: inherit; }
-  .wrap { padding: 14px; }
-  .card {
-    background: #ffffff;
-    border: 1px solid #e2e5ea;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .hero {
-    background: linear-gradient(135deg, #eaf2fd 0%, #fdf6ea 100%);
-    padding: 18px 20px;
-  }
-  .hero-title { font-size: 18px; font-weight: 600; color: #16305c; }
-  .hero-sub { font-size: 13px; color: #16305c; margin-top: 2px; }
-  .hero-row { display: flex; gap: 8px; margin-top: 12px; }
-  .search-box, .copilot-box {
-    background: #ffffff;
-    border: 1px solid #d7dce4;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 13px;
-  }
-  .search-box { flex: 1; color: #8a90a0; }
-  .copilot-box { color: #1f2430; white-space: nowrap; border-color: #b9c2cf; }
+:root{
+  --ch-navy:#0D2B4B;
+  --ch-blue:#1A5FA8;
+  --ch-teal:#00A9A5;
+  --ch-teal-dark:#008F8C;
+  --ch-light:#E8F4FD;
+  --ch-gray:#6C7A8D;
+  --ch-dark:#1A2332;
+  --ch-border:#D0DDE9;
+  --font-main:'Noto Sans TC','Microsoft JhengHei',sans-serif;
+  --radius:12px;
+  --shadow-sm:0 1px 4px rgba(13,43,75,.06);
+  --shadow-md:0 6px 20px rgba(13,43,75,.10);
+  --shadow-lg:0 14px 40px rgba(13,43,75,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-main);
+  color:#2C3E50;
+  background:#F4F8FC;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
 
-  .section { padding: 16px 20px; border-bottom: 1px solid #eceef2; }
-  .section-title { font-size: 13px; font-weight: 600; color: #545b66; margin-bottom: 10px; }
+/* ============ 進場動畫 ============ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0}
+.reveal.in{animation:fadeUp .6s cubic-bezier(.16,.84,.44,1) forwards}
 
-  .todo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); gap: 8px; }
-  .todo-tile { background: #f5f6f8; border-radius: 8px; padding: 12px; text-align: center; }
-  .todo-tile .icon { font-size: 20px; }
-  .todo-tile .label { font-size: 13px; margin-top: 6px; }
-  .todo-tile.disabled { opacity: .55; }
-  a.todo-tile:hover { background: #eaf1fd; }
+/* ============ 橫幅 ============ */
+.hero{
+  background:linear-gradient(135deg,var(--ch-navy) 0%,var(--ch-blue) 60%,#1A7BA8 100%);
+  position:relative;overflow:hidden;
+  padding:44px 0 40px;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300A9A5' fill-opacity='0.07'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero .wrap{position:relative;z-index:1}
+.hero h1{color:#fff;font-weight:900;font-size:clamp(1.6rem,3vw,2.1rem);letter-spacing:.02em}
+.hero .sub{color:rgba(255,255,255,.8);font-size:1rem;margin-top:4px}
+.hero-bar{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+.search-box{
+  flex:1;min-width:240px;display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.96);border-radius:var(--radius);
+  padding:12px 18px;color:var(--ch-gray);font-size:.95rem;
+  transition:box-shadow .3s,transform .3s;
+}
+.search-box:hover{box-shadow:0 0 0 3px rgba(0,169,165,.35);transform:translateY(-1px)}
+.search-box svg{flex-shrink:0}
+.copilot-btn{
+  display:flex;align-items:center;gap:8px;
+  background:var(--ch-teal);color:#fff;font-weight:600;
+  padding:12px 22px;border-radius:var(--radius);white-space:nowrap;
+  transition:background .3s,transform .3s,box-shadow .3s;
+}
+.copilot-btn:hover{background:var(--ch-teal-dark);transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,143,140,.4)}
 
-  .onboarding { background: #fff8e6; }
-  .onboarding .section-title { color: #8a5a00; }
-  .onboarding-list { font-size: 13px; color: #8a5a00; line-height: 1.9; }
-  .onboarding-list a { text-decoration: underline; }
+/* ============ 通用區塊 ============ */
+section{padding:34px 0}
+.sec-label{font-size:.82rem;font-weight:700;color:var(--ch-gray);letter-spacing:.05em;margin-bottom:16px;text-transform:uppercase}
+.sec-label.navy{color:var(--ch-navy);font-size:1rem}
 
-  .two-col { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: 16px; }
-  .announce-item { font-size: 13px; line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #eceef2; }
-  .announce-item:last-child { border-bottom: none; }
+/* ============ 磁磚格 ============ */
+.tile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.tile{
+  background:#fff;border:1px solid var(--ch-border);border-radius:var(--radius);
+  padding:22px 14px;text-align:center;cursor:pointer;
+  transition:transform .28s cubic-bezier(.16,.84,.44,1),box-shadow .28s,border-color .28s;
+  box-shadow:var(--shadow-sm);
+}
+.tile:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:var(--ch-teal)}
+.tile .ic{
+  width:46px;height:46px;margin:0 auto 10px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--ch-light);color:var(--ch-blue);
+  transition:background .28s,color .28s,transform .28s;
+}
+.tile:hover .ic{background:var(--ch-teal);color:#fff;transform:scale(1.08)}
+.tile .tt{font-weight:700;font-size:.95rem;color:var(--ch-navy)}
 
-  .kpi-card { background: #f5f6f8; border-radius: 8px; padding: 12px; }
-  .kpi-label { font-size: 13px; color: #8a90a0; }
-  .kpi-value { font-size: 24px; font-weight: 600; }
-  .kpi-bars { display: flex; align-items: flex-end; gap: 5px; height: 44px; margin-top: 10px; }
-  .kpi-bars div { flex: 1; background: #4f8ef7; border-radius: 2px; }
-  .kpi-caption { font-size: 12px; color: #8a90a0; margin-top: 6px; }
+/* ============ 卡片列 ============ */
+.card{background:#fff;border:1px solid var(--ch-border);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 
-  .bottom-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; padding: 16px 20px; }
-  .tag { font-size: 12px; background: #f5f6f8; border-radius: 8px; padding: 4px 10px; display: inline-block; margin: 0 6px 6px 0; }
-  .kb-list { font-size: 13px; line-height: 1.8; }
-  .kb-list a { color: #1b3a6b; }
-  .kb-list span.plain { color: #545b66; }
+/* 連結清單 */
+.link-list{list-style:none}
+.link-list li{border-bottom:1px solid #EEF3F8}
+.link-list li:last-child{border-bottom:none}
+.link-list a{
+  display:flex;align-items:center;gap:10px;padding:13px 18px;
+  color:var(--ch-navy);font-size:.95rem;font-weight:500;
+  transition:background .2s,padding-left .2s,color .2s;
+}
+.link-list a:hover{background:var(--ch-light);padding-left:24px;color:var(--ch-blue)}
+.link-list a .ext{margin-left:auto;font-size:.72rem;color:var(--ch-gray);font-weight:400}
+.card-head{padding:15px 18px;border-bottom:1px solid #EEF3F8;font-weight:700;color:var(--ch-navy);display:flex;align-items:center;gap:8px}
 
-  .note { font-size: 11px; color: #b0b6c0; padding: 6px 20px 14px; }
+/* 公告 */
+.news-item{
+  display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;
+  border-bottom:1px solid #EEF3F8;transition:background .2s,padding-left .2s;
+}
+.news-item:last-child{border-bottom:none}
+.news-item:hover{background:var(--ch-light);padding-left:24px}
+.news-item .dot{width:8px;height:8px;border-radius:50%;background:var(--ch-teal);flex-shrink:0}
+.news-item .txt{font-size:.95rem;color:var(--ch-navy);font-weight:500;flex:1}
+.news-item .date{font-size:.78rem;color:var(--ch-gray)}
+.badge-new{background:#E63946;color:#fff;font-size:.66rem;font-weight:700;padding:1px 7px;border-radius:20px;margin-left:6px}
+
+/* 提醒條 */
+.notice{
+  background:linear-gradient(90deg,rgba(0,169,165,.10),rgba(26,95,168,.06));
+  border:1px solid rgba(0,169,165,.3);border-radius:var(--radius);
+  padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.notice .big{font-weight:900;color:var(--ch-navy);font-size:1.05rem}
+.notice .tag{background:var(--ch-navy);color:#fff;font-weight:700;padding:5px 14px;border-radius:8px;font-size:.9rem;letter-spacing:.03em}
+.notice .gst{margin-left:auto;font-size:.86rem;color:var(--ch-gray)}
+.notice .gst b{color:var(--ch-blue);font-size:1.05rem;letter-spacing:.04em}
+
+/* 新人清單 */
+.onboard{background:linear-gradient(135deg,#FFF8EC,#FFF3DD);border:1px solid #F0DFB8;border-radius:var(--radius);padding:20px 22px}
+.onboard h3{color:#9A6B10;font-size:1rem;margin-bottom:12px}
+.ob-item{display:flex;align-items:center;gap:11px;padding:7px 0;color:#8A6414;font-size:.94rem}
+.ob-item input{width:17px;height:17px;accent-color:var(--ch-teal);cursor:pointer}
+.ob-item a{color:var(--ch-blue);font-weight:600}
+.ob-item a:hover{text-decoration:underline}
+
+/* 據點膠囊 */
+.loc-block{margin-bottom:14px}
+.loc-block:last-child{margin-bottom:0}
+.loc-title{font-size:.85rem;font-weight:700;color:var(--ch-navy);margin-bottom:8px}
+.pills{display:flex;flex-wrap:wrap;gap:9px}
+.pill{
+  background:#fff;border:1px solid var(--ch-border);border-radius:30px;
+  padding:7px 18px;font-size:.9rem;font-weight:500;color:var(--ch-navy);
+  cursor:pointer;transition:all .25s;box-shadow:var(--shadow-sm);
+}
+.pill:hover{background:var(--ch-navy);color:#fff;border-color:var(--ch-navy);transform:translateY(-2px)}
+
+/* FAQ */
+.faq-q{padding:14px 18px;border-bottom:1px solid #EEF3F8;cursor:pointer;transition:background .2s}
+.faq-q:last-child{border-bottom:none}
+.faq-q:hover{background:var(--ch-light)}
+.faq-q .q{font-weight:600;color:var(--ch-navy);font-size:.94rem;display:flex;align-items:center;gap:8px}
+.faq-q .q::before{content:'Q';background:var(--ch-teal);color:#fff;width:20px;height:20px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.faq-q .a{max-height:0;overflow:hidden;transition:max-height .35s ease,margin .35s;color:var(--ch-gray);font-size:.9rem;padding-left:28px}
+.faq-q.open .a{max-height:200px;margin-top:8px}
+.faq-q .q .arw{margin-left:auto;transition:transform .3s;color:var(--ch-gray)}
+.faq-q.open .q .arw{transform:rotate(180deg)}
+
+/* 頁尾 */
+footer{background:var(--ch-navy);color:rgba(255,255,255,.75);text-align:center;padding:22px;font-size:.85rem;margin-top:20px}
+footer span{color:var(--ch-teal)}
+
+/* 彈跳視窗 */
+.modal-mask{position:fixed;inset:0;background:rgba(13,43,75,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-mask.show{display:flex;animation:maskIn .25s ease}
+@keyframes maskIn{from{opacity:0}to{opacity:1}}
+.modal{
+  background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:82vh;overflow:auto;
+  box-shadow:var(--shadow-lg);animation:modalIn .3s cubic-bezier(.16,.84,.44,1);
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-head{background:linear-gradient(135deg,var(--ch-navy),var(--ch-blue));color:#fff;padding:20px 24px;position:sticky;top:0}
+.modal-head .mtitle{font-size:1.15rem;font-weight:700}
+.modal-head .mdate{font-size:.82rem;color:rgba(255,255,255,.7);margin-top:3px}
+.modal-body{padding:22px 24px;color:#2C3E50;font-size:.95rem;line-height:1.9}
+.modal-body ul{margin:10px 0 10px 20px}
+.modal-close{position:absolute;top:16px;right:18px;background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;font-size:1.1rem;cursor:pointer;transition:background .2s}
+.modal-close:hover{background:rgba(255,255,255,.35)}
+
+@media(max-width:820px){
+  .grid-2,.grid-3{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="card">
 
-    <div class="hero">
-      <div class="hero-title">總翔企業 內部入口網站</div>
-      <div class="hero-sub">找表單、查規定、看數據，都從這裡開始</div>
-      <div class="hero-row">
-        <div class="search-box">🔍 搜尋文件、規定、同事</div>
-        <div class="copilot-box">💬 問 Copilot</div>
+<!-- ========== 橫幅 ========== -->
+<header class="hero">
+  <div class="wrap">
+    <h1>總翔企業 內部入口網站</h1>
+    <div class="sub">找表單、查規定、看數據，都從這裡開始</div>
+    <div class="hero-bar">
+      <div class="search-box" onclick="alert('請改用頁面頂端 SharePoint 內建搜尋，或串接站台搜尋網址')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        搜尋文件、規定、同事
       </div>
+      <a class="copilot-btn" href="#COPILOT_URL">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
+        問 Copilot
+      </a>
     </div>
-
-    <div class="section">
-      <div class="section-title">我要辦事</div>
-      <div class="todo-grid">
-        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE/1_%E5%9C%8B%E5%85%A7%E8%AB%8B%E6%AC%BE%E5%96%AE.xlsx" target="_blank">
-          <div class="icon">🧾</div><div class="label">請款</div>
-        </a>
-        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE/2_%E5%87%BA%E5%8B%A4%E8%A1%A8.xlsx" target="_blank">
-          <div class="icon">📅</div><div class="label">出勤・請假</div>
-        </a>
-        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE/3_%E5%85%AC%E5%8B%99%E7%A7%81%E8%BB%8A%E9%87%8C%E7%A8%8B%E7%B4%80%E9%8C%84%E8%A1%A8.xlsx" target="_blank">
-          <div class="icon">🚗</div><div class="label">公務車</div>
-        </a>
-        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE/6_%E5%87%BA%E5%B7%AE%E8%A8%88%E5%8A%83%E6%9B%B8.xlsx" target="_blank">
-          <div class="icon">✈️</div><div class="label">出差申請</div>
-        </a>
-        <a class="todo-tile" href="https://onanatek.sharepoint.com/sites/PowerAutomate/Lists/List1/AllItems.aspx" target="_blank">
-          <div class="icon">🛒</div><div class="label">採購</div>
-        </a>
-        <div class="todo-tile disabled" title="尚未設定連結">
-          <div class="icon">🛠️</div><div class="label">IT 報修</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section onboarding">
-      <div class="section-title">新人上手：報到第一週</div>
-      <div class="onboarding-list">
-        <div>✅ 看 3 分鐘公司簡介影片</div>
-        <div>⬜ <a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FPowerAutomate%2FShared%20Documents%2F%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE&viewid=b6661aca%2D1b66%2D422e%2D9b56%2D62221fbeecb2" target="_blank">下載請款表單</a>並讀 <a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/SOP/%E5%9C%8B%E5%85%A7%E5%A4%96%E5%80%8B%E4%BA%BA%E8%AB%8B%E6%AC%BESOP-2026.03.03%E6%9B%B4.pdf" target="_blank">SOP</a></div>
-        <div>⬜ 認識我的部門與主管</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="two-col">
-        <div>
-          <div class="section-title">公告</div>
-          <div>
-            <div class="announce-item">115/3/1 起國外日支費調整</div>
-            <div class="announce-item">請款單月底前送達總公司</div>
-            <div class="announce-item">尾牙報名開始</div>
-          </div>
-        </div>
-        <div>
-          <div class="section-title">營運數據</div>
-          <div class="kpi-card">
-            <div class="kpi-label">本月營收</div>
-            <div class="kpi-value">— — —</div>
-            <div class="kpi-bars">
-              <div style="height:40%"></div>
-              <div style="height:65%"></div>
-              <div style="height:50%"></div>
-              <div style="height:85%"></div>
-              <div style="height:70%"></div>
-            </div>
-            <div class="kpi-caption">Power BI 報表</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bottom-grid">
-      <div>
-        <div class="section-title">各區據點</div>
-        <div>
-          <span class="tag">北區</span>
-          <span class="tag">中區</span>
-          <span class="tag">台南區</span>
-          <span class="tag">麥寮區</span>
-          <span class="tag">高雄區</span>
-        </div>
-      </div>
-      <div>
-        <div class="section-title">知識庫</div>
-        <div class="kb-list">
-          <div><a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/SOP/%E5%9C%8B%E5%85%A7%E5%A4%96%E5%80%8B%E4%BA%BA%E8%AB%8B%E6%AC%BESOP-2026.03.03%E6%9B%B4.pdf" target="_blank">請款常見問題</a></div>
-          <div><span class="plain">人事規章與福利</span></div>
-          <div><span class="plain">技術部維修紀錄</span></div>
-        </div>
-      </div>
-    </div>
-
   </div>
-  <div class="note">灰底無底線項目尚未設定連結，可再補上實際頁面。</div>
+</header>
+
+<!-- ========== 最新公告 ========== -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-label">最新公告</div>
+    <div class="card">
+      <div class="news-item" onclick="openModal(0)"><span class="dot"></span><span class="txt">115/3/1 起國外日支費調整<span class="badge-new">NEW</span></span><span class="date">02/12</span></div>
+      <div class="news-item" onclick="openModal(1)"><span class="dot"></span><span class="txt">請款單月底前送達總公司</span><span class="date">02/01</span></div>
+      <div class="news-item" onclick="openModal(2)"><span class="dot"></span><span class="txt">尾牙報名開始</span><span class="date">01/20</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 我要辦事 ========== -->
+<section style="padding-top:0">
+  <div class="wrap reveal">
+    <div class="sec-label">我要辦事</div>
+    <div class="tile-grid">
+      <a class="tile" href="#PUNCH_URL" target="_blank"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="tt">104 企業大師</div></a>
+      <a class="tile" href="#REQ_URL"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h2"/></svg></div><div class="tt">國內請款單</div></a>
+      <a class="tile" href="#ATT_URL"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></svg></div><div class="tt">出勤表</div></a>
+      <a class="tile" href="#CAR_URL"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H3v-5l2-5h14l2 5v5h-2M5 17a2 2 0 1 0 4 0M15 17a2 2 0 1 0 4 0M5 17h10"/></svg></div><div class="tt">公務車私車里程紀錄表</div></a>
+      <a class="tile" href="#INTL_REQ_URL"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></div><div class="tt">國外請款單</div></a>
+      <a class="tile" href="#ALLOW_URL"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></div><div class="tt">國外出差津貼申請表</div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 請款重要日期 ========== -->
+<section style="padding-top:0">
+  <div class="wrap reveal">
+    <div class="notice">
+      <span class="tag">請款時程</span>
+      <span class="big">當月底前送達 → 次月 15 號付款</span>
+      <span class="gst">總翔統編：<b>86920553</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 新人上手 ========== -->
+<section style="padding-top:0">
+  <div class="wrap reveal">
+    <div class="onboard">
+      <h3>🌱 新人上手：報到第一週</h3>
+      <div class="ob-item"><input type="checkbox"><span>看 3 分鐘公司簡介影片</span></div>
+      <div class="ob-item"><input type="checkbox"><span>下載
+        <a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FPowerAutomate%2FShared%20Documents%2F%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE&viewid=b6661aca%2D1b66%2D422e%2D9b56%2D62221fbeecb2" target="_blank">請款表單</a>
+        並讀 <a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/SOP/%E5%9C%8B%E5%85%A7%E5%A4%96%E5%80%8B%E4%BA%BA%E8%AB%8B%E6%AC%BESOP-2026.03.03%E6%9B%B4.pdf" target="_blank">SOP</a></span></div>
+      <div class="ob-item"><input type="checkbox"><span>認識我的部門與主管</span></div>
+      <div class="ob-item"><input type="checkbox"><span>設定 <a href="#PUNCH_URL" target="_blank">104 打卡系統</a></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 各部門 + 系統工具 ========== -->
+<section style="padding-top:0">
+  <div class="wrap reveal">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head">🏢 各部門 SharePoint</div>
+        <ul class="link-list">
+          <li><a href="#DEPT_HR">人資部</a></li>
+          <li><a href="#DEPT_ADMIN">管理部</a></li>
+          <li><a href="#DEPT_RD">研發部</a></li>
+          <li><a href="#DEPT_SALES">業務部</a></li>
+          <li><a href="#DEPT_TECH">技術部</a></li>
+          <li><a href="#DEPT_MFG">製造部</a></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-head">🔧 系統與工具</div>
+        <ul class="link-list">
+          <li><a href="#PUNCH_URL" target="_blank">104 打卡系統<span class="ext">外部 ↗</span></a></li>
+          <li><a href="#WEBSITE_URL" target="_blank">公司官方網站<span class="ext">外部 ↗</span></a></li>
+          <li><a href="#IT_URL">IT 報修</a></li>
+          <li><a href="#ORG_URL">組織圖 / 主管聯絡</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 常見問題 ========== -->
+<section style="padding-top:0">
+  <div class="wrap reveal">
+    <div class="sec-label">常見問題</div>
+    <div class="card">
+      <div class="faq-q" onclick="this.classList.toggle('open')">
+        <div class="q">停車費可以報嗎？<svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="a">限入廠、辦公、與客戶吃飯相關停車。個人吃飯或處理私事不可報。需填時間點、拜訪客戶或工作內容、地點（停車場名稱）。</div>
+      </div>
+      <div class="faq-q" onclick="this.classList.toggle('open')">
+        <div class="q">公司統編是多少？<svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="a">總翔統編 86920553。發票務必打統編且確認無誤，統編錯誤且無法換票時需另提供等值發票才能請款。</div>
+      </div>
+      <div class="faq-q" onclick="this.classList.toggle('open')">
+        <div class="q">請款多久會付款？<svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="a">當月底前送達總公司，次月 15 號付款。郵寄以總公司實際收到日為準；資料或發票不完整會影響付款時間。</div>
+      </div>
+      <div class="faq-q" onclick="this.classList.toggle('open')">
+        <div class="q">安全鞋、生育補助怎麼申請？<svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="a">安全鞋每年上限 2,500 元、一年一次。生育補助每胎 5,000 元、限一次，需附出生證明及滿 5,000 元的嬰兒用品發票。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 據點 + 知識庫 ========== -->
+<section style="padding-top:0">
+  <div class="wrap reveal">
+    <div class="grid-2">
+      <div>
+        <div class="sec-label">各區據點</div>
+        <div class="loc-block">
+          <div class="loc-title">🇹🇼 台灣據點</div>
+          <div class="pills">
+            <span class="pill">台北分公司</span><span class="pill">新竹分公司</span><span class="pill">雲林分公司</span><span class="pill">台中分公司</span><span class="pill">高雄總公司</span>
+          </div>
+        </div>
+        <div class="loc-block">
+          <div class="loc-title">🇨🇳 大陸據點</div>
+          <div class="pills">
+            <span class="pill">上海</span><span class="pill">北京</span><span class="pill">成都</span><span class="pill">武漢</span><span class="pill">深圳</span><span class="pill">昆山</span>
+          </div>
+        </div>
+        <div class="loc-block">
+          <div class="loc-title">🇻🇳 越南據點</div>
+          <div class="pills">
+            <span class="pill">（分點名稱）</span>
+          </div>
+        </div>
+        <div class="loc-block">
+          <div class="loc-title">🇺🇸 亞歷桑納州據點</div>
+          <div class="pills">
+            <span class="pill">（分點名稱）</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">📚 知識庫</div>
+        <ul class="link-list">
+          <li><a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FPowerAutomate%2FShared%20Documents%2F%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE&viewid=b6661aca%2D1b66%2D422e%2D9b56%2D62221fbeecb2" target="_blank">下載請款表單</a></li>
+          <li><a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/SOP/%E5%9C%8B%E5%85%A7%E5%A4%96%E5%80%8B%E4%BA%BA%E8%AB%8B%E6%AC%BESOP-2026.03.03%E6%9B%B4.pdf" target="_blank">個人請款 SOP</a></li>
+          <li><a href="#CAR_RULE_URL">公務車公司規章</a></li>
+          <li><a href="#WELFARE_URL">員工福利</a></li>
+          <li><a href="#HR_RULE_URL">人事規章</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>總翔<span>企業</span> 內部入口網站 · 內部使用</footer>
+
+<!-- ========== 彈跳視窗 ========== -->
+<div class="modal-mask" id="mask" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="mtitle" id="mTitle"></div>
+      <div class="mdate" id="mDate"></div>
+    </div>
+    <div class="modal-body" id="mBody"></div>
+  </div>
 </div>
+
+<script>
+/* ===== 範例公告內容（之後自行修改此陣列即可） ===== */
+const NEWS=[
+  {title:"115/3/1 起國外日支費調整",date:"公告日 2026/02/12",body:`<p>自 115 年 3 月 1 日起，國外出差日支費調整如下：</p><ul><li>歐洲、美洲、加拿大等地區：<b>USD 110 / 日</b></li><li>大陸、新加坡：<b>USD 50 / 日</b></li></ul><p>以日支費核銷後，不另支付同仁出差期間餐費。申請時請附國外出差津貼申請表＋台銀匯率表＋出差報告書。</p>`},
+  {title:"請款單月底前送達總公司",date:"公告日 2026/02/01",body:`<p>提醒各位同仁：</p><ul><li>當月底前送達的請款資料，於<b>次月 15 號</b>付款。</li><li>需郵寄者請提前寄送，會依總公司實際收到日期登記。</li><li>資料或發票不完整、有問題，會影響付款時間。</li></ul><p>請款單須經主管簽核後，連同發票一起交回總公司（外縣市可郵寄）。</p>`},
+  {title:"尾牙報名開始",date:"公告日 2026/01/20",body:`<p>本次範例公告，請自行替換為實際內容。</p><p>你只要打開這份 HTML 檔，找到最上方 <code>NEWS</code> 這個清單，修改 title / date / body 三個欄位就好。body 支援 HTML 標籤（清單、粗體、連結都可以）。</p>`}
+];
+function openModal(i){
+  document.getElementById('mTitle').textContent=NEWS[i].title;
+  document.getElementById('mDate').textContent=NEWS[i].date;
+  document.getElementById('mBody').innerHTML=NEWS[i].body;
+  document.getElementById('mask').classList.add('show');
+}
+function closeModal(){document.getElementById('mask').classList.remove('show')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* ===== 進場淡入 ===== */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
