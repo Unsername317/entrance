@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>總翔企業 資訊部入口網站</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* 這裡保留您原本完全一致的 CSS 樣式，未做任何刪減，確保無縫接軌 */
+    :root {
+      --ch-navy: #0D2B4B;
+      --ch-blue: #1A5FA8;
+      --ch-teal: #00A9A5;
+      --ch-teal-dark: #008F8C;
+      --ch-light: #E8F4FD;
+      --ch-gray: #6C7A8D;
+      --ch-dark: #1A2332;
+      --ch-border: #D0DDE9;
+      --font-main: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+      --radius: 12px;
+      --shadow-sm: 0 1px 4px rgba(13, 43, 75, .06);
+      --shadow-md: 0 6px 20px rgba(13, 43, 75, .10);
+      --shadow-lg: 0 14px 40px rgba(13, 43, 75, .16);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    html { scroll-behavior: smooth }
+    body {
+      font-family: var(--font-main);
+      color: #2C3E50;
+      background: #F4F8FC;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px }
+
+    /* ============ 進場動畫 ============ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px) }
+      to { opacity: 1; transform: translateY(0) }
+    }
+    .reveal { opacity: 0 }
+    .reveal.in { animation: fadeUp .6s cubic-bezier(.16, .84, .44, 1) forwards }
+
+    /* ============ 橫幅 ============ */
+    .hero {
+      background: linear-gradient(135deg, var(--ch-navy) 0%, var(--ch-blue) 60%, #1A7BA8 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 44px 0 40px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300A9A5' fill-opacity='0.07'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero .wrap { position: relative; z-index: 1 }
+    .hero h1 { color: #fff; font-weight: 900; font-size: clamp(1.6rem, 3vw, 2.1rem); letter-spacing: .02em }
+    .hero .sub { color: rgba(255, 255, 255, .8); font-size: 1rem; margin-top: 4px }
+
+    /* ============ 通用區塊 ============ */
+    section { padding: 34px 0; scroll-margin-top: 56px }
+    .sec-label { font-size: .82rem; font-weight: 700; color: var(--ch-gray); letter-spacing: .05em; margin-bottom: 16px; text-transform: uppercase }
+
+    /* ============ 磁磚格 ============ */
+    .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px }
+    .tile {
+      background: #fff; border: 1px solid var(--ch-border); border-radius: var(--radius);
+      padding: 22px 14px; text-align: center; cursor: pointer;
+      transition: transform .28s cubic-bezier(.16, .84, .44, 1), box-shadow .28s, border-color .28s;
+      box-shadow: var(--shadow-sm);
+    }
+    .tile:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--ch-teal) }
+    .tile .ic {
+      width: 46px; height: 46px; margin: 0 auto 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      background: var(--ch-light); color: var(--ch-blue); transition: background .28s, color .28s, transform .28s;
+    }
+    .tile:hover .ic { background: var(--ch-teal); color: #fff; transform: scale(1.08) }
+    .tile .tt { font-weight: 700; font-size: .95rem; color: var(--ch-navy) }
+
+    /* ============ 卡片列 ============ */
+    .card { background: #fff; border: 1px solid var(--ch-border); border-radius: var(--radius); box-shadow: var(--shadow-sm) }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px }
+
+    /* 連結清單 */
+    .link-list { list-style: none }
+    .link-list li { border-bottom: 1px solid #EEF3F8 }
+    .link-list li:last-child { border-bottom: none }
+    .link-list a {
+      display: flex; align-items: center; gap: 10px; padding: 13px 18px;
+      color: var(--ch-navy); font-size: .95rem; font-weight: 500;
+      transition: background .2s, padding-left .2s, color .2s;
+    }
+    .link-list a:hover { background: var(--ch-light); padding-left: 24px; color: var(--ch-blue) }
+    .link-list a .ext { margin-left: auto; font-size: .72rem; color: var(--ch-gray); font-weight: 400 }
+    .card-head { padding: 15px 18px; border-bottom: 1px solid #EEF3F8; font-weight: 700; color: var(--ch-navy); display: flex; align-items: center; gap: 8px }
+
+    /* 公告 */
+    .news-item {
+      display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; border-bottom: 1px solid #EEF3F8; transition: background .2s, padding-left .2s;
+    }
+    .news-item:last-child { border-bottom: none }
+    .news-item:hover { background: var(--ch-light); padding-left: 24px }
+    .news-item .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ch-teal); flex-shrink: 0 }
+    .news-item .txt { font-size: .95rem; color: var(--ch-navy); font-weight: 500; flex: 1 }
+    .news-item .date { font-size: .78rem; color: var(--ch-gray) }
+    .badge-new { background: #E63946; color: #fff; font-size: .66rem; font-weight: 700; padding: 1px 7px; border-radius: 20px; margin-left: 6px }
+
+    /* 提醒條 */
+    .notice {
+      background: linear-gradient(90deg, rgba(0, 169, 165, .10), rgba(26, 95, 168, .06)); border: 1px solid rgba(0, 169, 165, .3);
+      border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    }
+    .notice .big { font-weight: 900; color: var(--ch-navy); font-size: 1.05rem }
+    .notice .tag { background: #E63946; color: #fff; font-weight: 700; padding: 5px 14px; border-radius: 8px; font-size: .9rem; letter-spacing: .03em }
+    .notice .gst { margin-left: auto; font-size: .86rem; color: var(--ch-gray) }
+    .notice .gst b { color: var(--ch-blue); font-size: 1.05rem; letter-spacing: .04em }
+
+    /* 新人清單 */
+    .onboard { background: linear-gradient(135deg, #E8F4FD, #F4F8FC); border: 1px solid #D0DDE9; border-radius: var(--radius); padding: 20px 22px }
+    .onboard h3 { color: var(--ch-blue); font-size: 1rem; margin-bottom: 12px }
+    .ob-item { display: flex; align-items: center; gap: 11px; padding: 7px 0; color: var(--ch-navy); font-size: .94rem }
+    .ob-item input { width: 17px; height: 17px; accent-color: var(--ch-teal); cursor: pointer }
+    .ob-item a { color: var(--ch-blue); font-weight: 600 }
+    .ob-item a:hover { text-decoration: underline }
+
+    /* FAQ */
+    .faq-q { padding: 14px 18px; border-bottom: 1px solid #EEF3F8; cursor: pointer; transition: background .2s }
+    .faq-q:last-child { border-bottom: none }
+    .faq-q:hover { background: var(--ch-light) }
+    .faq-q .q { font-weight: 600; color: var(--ch-navy); font-size: .94rem; display: flex; align-items: center; gap: 8px }
+    .faq-q .q::before {
+      content: 'Q'; background: var(--ch-teal); color: #fff; width: 20px; height: 20px; border-radius: 5px;
+      display: inline-flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; flex-shrink: 0
+    }
+    .faq-q .a { max-height: 0; overflow: hidden; transition: max-height .35s ease, margin .35s; color: var(--ch-gray); font-size: .9rem; padding-left: 28px }
+    .faq-q.open .a { max-height: 200px; margin-top: 8px }
+    .faq-q .q .arw { margin-left: auto; transition: transform .3s; color: var(--ch-gray) }
+    .faq-q.open .q .arw { transform: rotate(180deg) }
+
+    /* 頁尾 */
+    footer { background: var(--ch-navy); color: rgba(255, 255, 255, .75); text-align: center; padding: 22px; font-size: .85rem; margin-top: 20px }
+    footer span { color: var(--ch-teal) }
+    .feedback-link { color: var(--ch-teal); font-weight: 600 }
+    .feedback-link:hover { text-decoration: underline }
+
+    /* 彈跳視窗 */
+    .modal-mask { position: fixed; inset: 0; background: rgba(13, 43, 75, .55); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px }
+    .modal-mask.show { display: flex; animation: maskIn .25s ease }
+    @keyframes maskIn { from { opacity: 0 } to { opacity: 1 } }
+    .modal { background: #fff; border-radius: 16px; max-width: 560px; width: 100%; max-height: 82vh; overflow: auto; box-shadow: var(--shadow-lg); animation: modalIn .3s cubic-bezier(.16, .84, .44, 1); }
+    @keyframes modalIn { from { opacity: 0; transform: scale(.94) translateY(12px) } to { opacity: 1; transform: scale(1) translateY(0) } }
+    .modal-head { background: linear-gradient(135deg, var(--ch-navy), var(--ch-blue)); color: #fff; padding: 20px 24px; position: sticky; top: 0 }
+    .modal-head .mtitle { font-size: 1.15rem; font-weight: 700; max-width: 95%; }
+    .modal-head .mdate { font-size: .82rem; color: rgba(255, 255, 255, .7); margin-top: 3px }
+    .modal-body { padding: 22px 24px; color: #2C3E50; font-size: .95rem; line-height: 1.9 }
+    .modal-body ul { margin: 10px 0 10px 20px }
+    .modal-close { position: absolute; top: 16px; right: 18px; background: rgba(255, 255, 255, .2); border: none; color: #fff; width: 30px; height: 30px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: background .2s }
+    .modal-close:hover { background: rgba(255, 255, 255, .35) }
+    .modal-body a { color: var(--ch-blue); font-weight: 600; line-height: 2; }
+    .modal-body a:hover { text-decoration: underline; }
+
+    @media(max-width:820px) { .grid-2 { grid-template-columns: 1fr } }
+
+    /* ============ 章節導覽列 ============ */
+    .subnav { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid var(--ch-border); box-shadow: var(--shadow-sm); }
+    .subnav .wrap { display: flex; gap: 4px; overflow-x: auto; padding: 0 20px; scrollbar-width: none }
+    .subnav .wrap::-webkit-scrollbar { display: none }
+    .subnav a { flex-shrink: 0; padding: 13px 14px; font-size: .88rem; font-weight: 600; color: var(--ch-gray); border-bottom: 3px solid transparent; transition: color .2s, border-color .2s; white-space: nowrap; }
+    .subnav a:hover { color: var(--ch-navy) }
+    .subnav a.active { color: var(--ch-teal-dark); border-color: var(--ch-teal) }
+
+    /* ============ 回到頂端 ============ */
+    .back-top { position: fixed; right: 22px; bottom: 22px; width: 44px; height: 44px; border-radius: 50%; background: var(--ch-navy); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); cursor: pointer; opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity .25s, transform .25s, visibility .25s, background .2s; z-index: 60; border: none; }
+    .back-top.show { opacity: 1; visibility: visible; transform: translateY(0) }
+    .back-top:hover { background: var(--ch-teal-dark) }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========== 橫幅 ========== -->
+  <header class="hero">
+    <div class="wrap">
+      <h1>總翔企業 資訊部入口網站</h1>
+      <div class="sub">IT 服務、系統報修、資源申請，都從這裡開始</div>
+    </div>
+  </header>
+
+  <!-- ========== 章節導覽列 ========== -->
+  <nav class="subnav">
+    <div class="wrap">
+      <a href="#sec-news">最新公告</a>
+      <a href="#sec-todo">IT 服務</a>
+      <a href="#sec-onboard">新人指南</a>
+      <a href="#sec-dept">系統與知識庫</a>
+      <a href="#sec-faq">常見問題</a>
+    </div>
+  </nav>
+
+  <!-- ========== 最新公告 (IT版) ========== -->
+  <section id="sec-news">
+    <div class="wrap reveal">
+      <div class="sec-label">系統與資安公告</div>
+      <div class="card">
+        <div class="news-item" onclick="openModal(0)"><span class="dot"></span><span class="txt">【資安宣導】近期偽造微軟信件增加，請防範釣魚郵件<span class="badge-new">重要</span></span><span class="date">08/10</span></div>
+        <div class="news-item" onclick="openModal(1)"><span class="dot"></span><span class="txt">【系統維護】ERP 系統本週末 (8/15) 進行升級停機</span><span class="date">08/05</span></div>
+        <div class="news-item" onclick="openModal(2)"><span class="dot"></span><span class="txt">全公司防毒軟體升級作業已自動派送完成</span><span class="date">07/28</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== IT 服務 (我要辦事) ========== -->
+  <section id="sec-todo" style="padding-top:0">
+    <div class="wrap reveal">
+      <div class="sec-label">快速辦事 / IT 服務</div>
+      <div class="tile-grid">
+        <a class="tile" href="您的報修系統網址" target="_blank">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+          <div class="tt">IT 報修系統</div>
+        </a>
+        <a class="tile" href="帳號密碼重置網址" target="_blank">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div class="tt">重置帳號密碼</div>
+        </a>
+        <a class="tile" href="VPN申請表單網址" target="_blank">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="tt">VPN 外部連線申請</div>
+        </a>
+        <a class="tile" href="設備申請表網址" target="_blank">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <div class="tt">資訊設備申請單</div>
+        </a>
+        <a class="tile" href="軟體下載區網址" target="_blank">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+          <div class="tt">常用軟體下載</div>
+        </a>
+        <a class="tile" href="會議室教學網址" target="_blank">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z"/><rect x="3" y="6" width="12" height="12" rx="2" ry="2"/></svg></div>
+          <div class="tt">會議室設備教學</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 緊急通報提醒 ========== -->
+  <section style="padding-top:0">
+    <div class="wrap reveal">
+      <div class="notice">
+        <span class="tag">緊急報修專線</span>
+        <span class="big">網路斷線、系統異常，請立即撥打 IT 專線</span>
+        <span class="gst">服務時間 09:00~18:00，分機：<b>7777</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 新人 IT 指南 ========== -->
+  <section id="sec-onboard" style="padding-top:0">
+    <div class="wrap reveal">
+      <div class="onboard">
+        <h3>💻 新人上手：IT 基本準備</h3>
+        <div class="ob-item"><input type="checkbox"><span>向資訊部領取筆記型電腦並完成資產點交</span></div>
+        <div class="ob-item"><input type="checkbox"><span>登入 Windows 帳號，並 <a href="#" target="_blank">修改您的初始密碼</a></span></div>
+        <div class="ob-item"><input type="checkbox"><span>連線公司內部 Wi-Fi，請參考 <a href="#" target="_blank">Wi-Fi 設定手冊</a></span></div>
+        <div class="ob-item"><input type="checkbox"><span>登入 Webmail，並套用 <a href="#" target="_blank">公司標準信件簽名檔</a></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 企業系統與知識庫 ========== -->
+  <section id="sec-dept" style="padding-top:0">
+    <div class="wrap reveal">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">⚙️ 企業重要系統</div>
+          <ul class="link-list">
+            <li><a href="您的ERP網址" target="_blank">ERP 企業資源規劃系統<span class="ext">內部網域</span></a></li>
+            <li><a href="您的BPM網址" target="_blank">BPM 電子簽核系統<span class="ext">內部網域</span></a></li>
+            <li><a href="https://pro.104.com.tw/psc2" target="_blank">104 企業大師 (考勤系統)<span class="ext">外部 ↗</span></a></li>
+            <li><a href="您的郵件網址" target="_blank">企業 Webmail<span class="ext">外部 ↗</span></a></li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-head">📚 IT 知識庫 (SOP & 手冊)</div>
+          <ul class="link-list">
+            <li><a href="VPN手冊網址" target="_blank">如何從外部連線 VPN (Windows / Mac)</a></li>
+            <li><a href="印表機手冊網址" target="_blank">各樓層影印機驅動程式下載與安裝教學</a></li>
+            <li><a href="Teams手冊網址" target="_blank">總翔 Teams 相關應用說明</a></li>
+            <li><a href="資安手冊網址" target="_blank">員工資訊安全規範守則</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 常見問題 (IT版) ========== -->
+  <section id="sec-faq" style="padding-top:0">
+    <div class="wrap reveal">
+      <div class="sec-label">常見問題 (FAQ)</div>
+      <div class="card">
+        <div class="faq-q" onclick="this.classList.toggle('open')">
+          <div class="q">忘記電腦或信箱密碼怎麼辦？<svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></div>
+          <div class="a">請使用首頁的「重置帳號密碼」服務，系統會發送簡訊驗證碼至您的手機。若您未綁定手機，請直撥 IT 專線由專人為您重置。</div>
+        </div>
+        <div class="faq-q" onclick="this.classList.toggle('open')">
+          <div class="q">我可以在公司電腦安裝自己的軟體嗎？<svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></div>
+          <div class="a">不行。為維護資訊安全與版權合法性，若有特定軟體需求，請至「IT 服務」填寫「軟體安裝申請單」，經主管與資訊部審核後派送安裝。</div>
+        </div>
+        <div class="faq-q" onclick="this.classList.toggle('open')">
+          <div class="q">印表機無法列印，出現離線狀態？<svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></div>
+          <div class="a">請先檢查您的電腦是否成功連線至公司內部 Wi-Fi。若連線正常仍無法列印，請確認是否選錯印表機，或至 IT 報修系統建單。</div>
+        </div>
+        <div class="faq-q" onclick="this.classList.toggle('open')">
+          <div class="q">遇到疑似釣魚信件該如何處理？<svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></div>
+          <div class="a">請絕對「不要」點擊信件內的任何連結或下載附件。請將該信件以「作為附件轉寄」的方式寄給資訊部信箱，並將原信件刪除。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    總翔<span>企業</span> 資訊部入口網站 · 內部使用<br>
+    遇到任何系統異常？<a class="feedback-link" href="mailto:it@anatekent.com?subject=IT入口網站-問題回報">點此聯絡資訊部</a>
+  </footer>
+
+  <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="回到頂端">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+  </button>
+
+  <!-- ========== 彈跳視窗 ========== -->
+  <div class="modal-mask" id="mask" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-head">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div class="mtitle" id="mTitle"></div>
+        <div class="mdate" id="mDate"></div>
+      </div>
+      <div class="modal-body" id="mBody"></div>
+    </div>
+  </div>
+
+  <script>
+    /* ===== IT 公告內容 ===== */
+    const NEWS = [
+      {
+        title: "【資安宣導】近期偽造微軟信件增加，請防範釣魚郵件",
+        date: "公告日 2026/08/10",
+        body: `<p>各位同仁好：</p>
+          <p>近日發現多起偽冒「Microsoft 帳號異常」、「密碼即將到期」的釣魚郵件。請同仁提高警覺，切勿點擊信件中的不明連結或輸入帳號密碼。</p>
+          <p><b>防範三步驟：</b></p>
+          <ul>
+            <li>檢查寄件者網域是否為官方真實網域。</li>
+            <li>不要輕易點擊信件內的超連結，可將滑鼠懸停查看實際網址。</li>
+            <li>如有疑慮，請直接聯繫資訊部 (分機 7777)。</li>
+          </ul>`
+      },
+      {
+        title: "【系統維護】ERP 系統本週末 (8/15) 進行升級停機",
+        date: "公告日 2026/08/05",
+        body: `<p>為提升系統效能與穩定度，資訊部預計於以下時段進行 ERP 系統升級作業：</p>
+        <p><b>停機時間：</b> 2026/08/15 (週六) 22:00 起至 2026/08/16 (週日) 04:00 止。</p>
+        <p>影響範圍：</p>
+        <ul>
+          <li>ERP 企業資源規劃系統（全面暫停服務）</li>
+          <li>BPM 電子簽核系統（與 ERP 相關之表單將無法拋轉）</li>
+        </ul>
+        <p>請有加班需求的同仁提前安排作業，造成不便敬請見諒。</p>`
+      },
+      { 
+        title: "全公司防毒軟體升級作業已自動派送完成",
+        date: "公告日 2026/07/28",
+        body: `<p>全公司電腦防毒軟體已於本週透過 AD 背景自動派送更新至最新版本。</p>
+        <p>若您的電腦右下角持續跳出「需要重新啟動以完成安裝」的提示，請您在下班前將電腦<b>重新開機</b>，以確保防護功能正常運作。</p>
+        <p>若發現軟體無法開啟或電腦異常緩慢，請至 IT 報修系統填單。</p>` 
+      }
+    ];
+
+    function openModal(i) {
+      document.getElementById('mTitle').textContent = NEWS[i].title;
+      document.getElementById('mDate').textContent = NEWS[i].date;
+      document.getElementById('mBody').innerHTML = NEWS[i].body;
+      document.getElementById('mask').classList.add('show');
+    }
+    function closeModal() { document.getElementById('mask').classList.remove('show') }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal() });
+
+    /* ===== 導覽列點擊：手動計算捲動位置 ===== */
+    const subnavEl = document.querySelector('.subnav');
+    document.querySelectorAll('.subnav a').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (!target) return;
+        const navH = subnavEl.offsetHeight;
+        const y = target.getBoundingClientRect().top + window.scrollY - navH - 8;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        history.replaceState(null, '', link.getAttribute('href'));
+      });
+    });
+
+    /* ===== 進場淡入 ===== */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } })
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    /* ===== 回到頂端按鈕顯示/隱藏 ===== */
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    /* ===== 導覽列高亮目前區塊 ===== */
+    const navLinks = document.querySelectorAll('.subnav a');
+    const secObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(a => a.classList.remove('active'));
+          const link = document.querySelector(`.subnav a[href="#${entry.target.id}"]`);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(sec => secObserver.observe(sec));
+  </script>
+</body>
+</html>
