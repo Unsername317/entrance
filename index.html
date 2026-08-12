@@ -759,6 +759,12 @@
       cursor: pointer;
       font-weight: 600;
     }
+
+    .ob-item.ob-loading {
+      opacity: .45;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
   </style>
 </head>
 
@@ -1151,10 +1157,11 @@
     const obStatusEl = document.getElementById('obStatus');
     const obCheckboxes = document.querySelectorAll('.ob-item input[data-ob-key]');
 
-    function obRenderStatus(userId) {
+    function obRenderStatus(userId, loading) {
       if (!obStatusEl) return;
       if (!userId) { obStatusEl.textContent = ''; return; }
-      obStatusEl.innerHTML = `目前紀錄身份：<b>${userId.replace(/</g, '&lt;')}</b>　<span class="chg" id="obChangeUser">變更</span>`;
+      const loadingTxt = loading ? '　<span style="opacity:.7">載入紀錄中…</span>' : '';
+      obStatusEl.innerHTML = `目前紀錄身份：<b>${userId.replace(/</g, '&lt;')}</b>　<span class="chg" id="obChangeUser">變更</span>${loadingTxt}`;
       const changeLink = document.getElementById('obChangeUser');
       if (changeLink) changeLink.addEventListener('click', obChangeUser);
     }
@@ -1183,6 +1190,9 @@
 
     async function obLoadState(userId) {
       if (!userId || !OB_WEBAPP_URL) return;
+      obCheckboxes.forEach(cb => cb.closest('.ob-item').classList.add('ob-loading'));
+      if (obStatusEl) obStatusEl.dataset.loading = '1';
+      obRenderStatus(userId, true);
       try {
         const res = await fetch(`${OB_WEBAPP_URL}?action=get&user=${encodeURIComponent(userId)}`);
         const data = await res.json();
@@ -1194,6 +1204,9 @@
         }
       } catch (err) {
         console.warn('無法載入打卡紀錄', err);
+      } finally {
+        obCheckboxes.forEach(cb => cb.closest('.ob-item').classList.remove('ob-loading'));
+        obRenderStatus(userId, false);
       }
     }
 
