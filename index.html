@@ -1188,19 +1188,47 @@
       else obCheckboxes.forEach(cb => cb.checked = false);
     }
 
+    const OB_CACHE_KEY = 'ob_cache_data';
+
+    function obGetCache(userId) {
+      try {
+        const all = JSON.parse(localStorage.getItem(OB_CACHE_KEY) || '{}');
+        return all[userId] || null;
+      } catch (err) { return null; }
+    }
+
+    function obSetCache(userId, state) {
+      try {
+        const all = JSON.parse(localStorage.getItem(OB_CACHE_KEY) || '{}');
+        all[userId] = state;
+        localStorage.setItem(OB_CACHE_KEY, JSON.stringify(all));
+      } catch (err) { /* 儲存失敗就算了，不影響主要功能 */ }
+    }
+
+    function obApplyState(state) {
+      obCheckboxes.forEach(cb => {
+        const key = cb.getAttribute('data-ob-key');
+        cb.checked = !!state[key];
+      });
+    }
+
     async function obLoadState(userId) {
       if (!userId || !OB_WEBAPP_URL) return;
-      obCheckboxes.forEach(cb => cb.closest('.ob-item').classList.add('ob-loading'));
-      if (obStatusEl) obStatusEl.dataset.loading = '1';
-      obRenderStatus(userId, true);
+      // 先用本機快取立刻顯示，不會有延遲感；沒有快取（這台裝置第一次用）才顯示載入中
+      const cached = obGetCache(userId);
+      if (cached) {
+        obApplyState(cached);
+      } else {
+        obCheckboxes.forEach(cb => cb.closest('.ob-item').classList.add('ob-loading'));
+        obRenderStatus(userId, true);
+      }
+      // 背景悄悄跟 Google 對最新資料，有差異就更新並存快取
       try {
         const res = await fetch(`${OB_WEBAPP_URL}?action=get&user=${encodeURIComponent(userId)}`);
         const data = await res.json();
         if (data && data.ok) {
-          obCheckboxes.forEach(cb => {
-            const key = cb.getAttribute('data-ob-key');
-            cb.checked = !!data.state[key];
-          });
+          obApplyState(data.state);
+          obSetCache(userId, data.state);
         }
       } catch (err) {
         console.warn('無法載入打卡紀錄', err);
@@ -1212,6 +1240,10 @@
 
     async function obSaveState(userId, key, checked) {
       if (!userId || !OB_WEBAPP_URL) return;
+      // 立刻更新本機快取，下次重整馬上看得到
+      const cached = obGetCache(userId) || {};
+      cached[key] = checked;
+      obSetCache(userId, cached);
       try {
         await fetch(OB_WEBAPP_URL, {
           method: 'POST',
