@@ -745,6 +745,20 @@
     .feedback-link:hover {
       text-decoration: underline
     }
+
+    /* ============ 新人打卡狀態列 ============ */
+    .ob-status {
+      font-size: .8rem;
+      color: #9A6B10;
+      margin-bottom: 10px;
+      opacity: .8;
+    }
+
+    .ob-status .chg {
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 600;
+    }
   </style>
 </head>
 
@@ -873,15 +887,16 @@
     <div class="wrap reveal">
       <div class="onboard">
         <h3>🌱 新人上手：報到第一週</h3>
+        <div class="ob-status" id="obStatus"></div>
         <!-- <div class="ob-item"><input type="checkbox"><span>看 3 分鐘公司簡介影片</span></div> -->
-        <div class="ob-item"><input type="checkbox"><span>下載
+        <div class="ob-item"><input type="checkbox" data-ob-key="download_form_sop"><span>下載
             <a href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FPowerAutomate%2FShared%20Documents%2F%E5%90%84%E9%A1%9E%E5%A0%B1%E8%AB%8B%E6%AC%BE%E8%A1%A8%E5%96%AE&viewid=b6661aca%2D1b66%2D422e%2D9b56%2D62221fbeecb2"
               target="_blank">請款表單</a>
             並讀 <a
               href="https://onanatek.sharepoint.com/sites/PowerAutomate/Shared%20Documents/SOP/%E5%9C%8B%E5%85%A7%E5%A4%96%E5%80%8B%E4%BA%BA%E8%AB%8B%E6%AC%BESOP-2026.03.03%E6%9B%B4.pdf"
               target="_blank">SOP</a></span></div>
-        <div class="ob-item"><input type="checkbox"><span>認識我的部門與主管</span></div>
-        <div class="ob-item"><input type="checkbox"><span>設定 <a href="https://pro.104.com.tw/psc2" target="_blank">104
+        <div class="ob-item"><input type="checkbox" data-ob-key="know_dept"><span>認識我的部門與主管</span></div>
+        <div class="ob-item"><input type="checkbox" data-ob-key="setup_104"><span>設定 <a href="https://pro.104.com.tw/psc2" target="_blank">104
               打卡系統</a></span></div>
       </div>
     </div>
@@ -1129,6 +1144,90 @@
       });
     }, { rootMargin: '-30% 0px -60% 0px' });
     document.querySelectorAll('section[id]').forEach(sec => secObserver.observe(sec));
+
+    /* ===== 新人上手打卡：跨裝置記錄（Google 試算表 + Apps Script）===== */
+    const OB_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzHMfJ9lPErP7MNZD720VK-wQGXB8Id6t0c1mnY3-xSxaKr5eATrjldcj3KF55JrJRj/exec';
+    const OB_STORAGE_KEY = 'ob_user_id';
+    const obStatusEl = document.getElementById('obStatus');
+    const obCheckboxes = document.querySelectorAll('.ob-item input[data-ob-key]');
+
+    function obRenderStatus(userId) {
+      if (!obStatusEl) return;
+      if (!userId) { obStatusEl.textContent = ''; return; }
+      obStatusEl.innerHTML = `目前紀錄身份：<b>${userId.replace(/</g, '&lt;')}</b>　<span class="chg" id="obChangeUser">變更</span>`;
+      const changeLink = document.getElementById('obChangeUser');
+      if (changeLink) changeLink.addEventListener('click', obChangeUser);
+    }
+
+    function obGetUserId() {
+      return (localStorage.getItem(OB_STORAGE_KEY) || '').trim();
+    }
+
+    function obAskUserId() {
+      const id = prompt('請輸入您的姓名或 Email，以便記錄您的報到進度（下次會自動記得）：');
+      if (id && id.trim()) {
+        localStorage.setItem(OB_STORAGE_KEY, id.trim());
+        return id.trim();
+      }
+      return '';
+    }
+
+    function obChangeUser(e) {
+      e.preventDefault();
+      localStorage.removeItem(OB_STORAGE_KEY);
+      const id = obAskUserId();
+      obRenderStatus(id);
+      if (id) obLoadState(id);
+      else obCheckboxes.forEach(cb => cb.checked = false);
+    }
+
+    async function obLoadState(userId) {
+      if (!userId || !OB_WEBAPP_URL) return;
+      try {
+        const res = await fetch(`${OB_WEBAPP_URL}?action=get&user=${encodeURIComponent(userId)}`);
+        const data = await res.json();
+        if (data && data.ok) {
+          obCheckboxes.forEach(cb => {
+            const key = cb.getAttribute('data-ob-key');
+            cb.checked = !!data.state[key];
+          });
+        }
+      } catch (err) {
+        console.warn('無法載入打卡紀錄', err);
+      }
+    }
+
+    async function obSaveState(userId, key, checked) {
+      if (!userId || !OB_WEBAPP_URL) return;
+      try {
+        await fetch(OB_WEBAPP_URL, {
+          method: 'POST',
+          body: JSON.stringify({ user: userId, key, checked })
+        });
+      } catch (err) {
+        console.warn('無法儲存打卡紀錄', err);
+      }
+    }
+
+    (function obInit() {
+      if (!obCheckboxes.length) return;
+      let userId = obGetUserId();
+      if (!userId) userId = obAskUserId();
+      obRenderStatus(userId);
+      if (userId) obLoadState(userId);
+
+      obCheckboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+          let uid = obGetUserId();
+          if (!uid) {
+            uid = obAskUserId();
+            obRenderStatus(uid);
+            if (!uid) { cb.checked = false; return; }
+          }
+          obSaveState(uid, cb.getAttribute('data-ob-key'), cb.checked);
+        });
+      });
+    })();
   </script>
 </body>
 
